@@ -9,6 +9,7 @@ import Drawer from './components/Drawer';
 function App() {
   const [items, setItems] = React.useState([]);
   const [cartItems, setCartItems] = React.useState([]);
+  const [favorites, setFavorites] = React.useState([]);
   const [searchValue, setSerchValue] = React.useState('');
   const [cartOpened, setCartOpened] = React.useState(false);
 
@@ -22,15 +23,20 @@ function App() {
 
   }, []);
 
- const onAddToCart = (obj) => {
-  axios.post('https://62dd641f79b9f8c30aa89ac3.mockapi.io/cart', obj);
-  setCartItems(prev => [...prev, obj]);
- };
+  const onAddToCart = (obj) => {
+    axios.post('https://62dd641f79b9f8c30aa89ac3.mockapi.io/cart', obj);
+    setCartItems((prev) => [...prev, obj]);
+   };
 
  const onRemoveItem = (id) => {
-  // axios.delete(`https://62dd641f79b9f8c30aa89ac3.mockapi.io/cart/${id}`);
-  setCartItems(prev => prev.filter(item => item.id ===id));
+  axios.delete(`https://62dd641f79b9f8c30aa89ac3.mockapi.io/cart/${id}`);
+  setCartItems((prev) => prev.filter(item => item.id !==id));
   };
+
+  const onAddToFavorite = (obj) => {
+    axios.post('https://62dd641f79b9f8c30aa89ac3.mockapi.io/favorites', obj);
+    setFavorites((prev) => [...prev, obj]);
+   };
  
  const onChangeSearchInput = (event) => {
   setSerchValue(event.target.value);
@@ -70,7 +76,7 @@ function App() {
               title={item.title}
               price={item.price}
               imageUrl={item.imageUrl}
-              onFavorite={() => console.log('Добавили в закладки')}
+              onFavorite={(obj) => onAddToFavorite(obj)}
               onPlus={(obj) => onAddToCart(obj)}
             />
           ))}        
